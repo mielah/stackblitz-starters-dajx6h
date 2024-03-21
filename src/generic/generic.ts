@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, WritableSignal, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PanelComponent } from './panel';
 import { GenericService } from './generic.service';
+import { flipSignalToggle } from '../shared'
 
 export interface Filter {
   field: string;
@@ -15,6 +16,7 @@ export interface Filter {
 @Component({
   selector: 'app-generic',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -32,7 +34,7 @@ export interface Filter {
   <!-- Advanced search link -->
   <div style="margin-top: 2rem; margin-bottom: 1rem;">
     <p-button label="Advanced Search" styleClass="p-button-link p-0 fs-5-5"
-      (onClick)="toggleAdvancedSearch()"></p-button>
+      (onClick)="flipSignalToggle(advancedPanelOpen)"></p-button>
   </div>
 
   <div class="d-flex flex-row gap-2 flex-wrap">
@@ -45,7 +47,7 @@ export interface Filter {
     </span>
   </div>
 
-  <app-panel [opened]="panelOpen" (toggled)="panelOpen = $event">
+  <app-panel [opened]="advancedPanelOpen">
   <form [formGroup]="form" name="advPatientSearchForm" (ngSubmit)="sendSearchEvent()">
     <hr>
       <ng-content select="[advanced]"></ng-content>
@@ -63,11 +65,12 @@ export interface Filter {
   providers: [],
 })
 export class GenericComponent {
+  flipSignalToggle = flipSignalToggle;
   @Output() searchInitiated = new EventEmitter<boolean>();
 
-  panelOpen: boolean = false;
+  advancedPanelOpen: WritableSignal<boolean> = signal<boolean>(false);
 
-  constructor(public genericService: GenericService) {}
+  constructor(public genericService: GenericService) { }
 
   sendSearchEvent() {
     this.searchInitiated.emit(false);
@@ -86,9 +89,5 @@ export class GenericComponent {
     });
 
     return criteria;
-  }
-
-  toggleAdvancedSearch(): void {
-    this.panelOpen = !this.panelOpen;
   }
 }

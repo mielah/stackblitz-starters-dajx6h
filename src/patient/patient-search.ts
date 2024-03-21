@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { InputGroupModule } from 'primeng/inputgroup';
 import {
   FormBuilder,
@@ -7,15 +7,16 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { GenericComponent } from './generic';
+import { GenericComponent } from '../generic//generic';
 import { TableModule } from 'primeng/table';
-import { SearchService } from './search.service';
-import { GenericService } from './generic.service';
+import { PatientSearchService } from './patient-search.service';
+import { GenericService } from '../generic/generic.service';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-pat-search',
+  selector: 'app-patient-search',
   providers: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -32,17 +33,17 @@ import { RouterLink } from '@angular/router';
     <div [formGroup]="form">
      <app-generic (searchInitiated)="search($event)">
         <div class="d-flex flex-row gap-3 justify-content-end" simple>
-           <!-- First name input -->
+           <!-- MRN input -->
            <div class="flex-column">
             <div class="p-inputgroup">
               <span class="p-float-label">
-                <input pInputText placeholder="First Name" class="form-control" type="text" id="first_name"
-                  name="first_name" formControlName="first_name" />
-                  <label htmlFor="first_name" class="fs-6">First Name</label>
+                <input pInputText placeholder="MRN" class="form-control" type="text" id="mrn"
+                  name="mrn" formControlName="mrn" />
+                  <label htmlFor="mrn" class="fs-6">MRN</label>
               </span>
             </div>
-            <div *ngIf="first_name?.invalid && (first_name?.dirty || first_name?.touched)" class="text-danger ms-5">
-              <small *ngIf="first_name?.errors?.['pattern']">Invalid First Name</small>
+            <div *ngIf="mrn?.invalid && (mrn?.dirty || mrn?.touched)" class="text-danger ms-5">
+              <small *ngIf="mrn?.errors?.['pattern']">Invalid MRN</small>
             </div>
           </div>
         </div>
@@ -98,19 +99,21 @@ import { RouterLink } from '@angular/router';
 </div>
   `,
 })
-export class SearchComponent {
-  searchStatus = '';
+export class PatientSearchComponent {
+  searchStatus = ''; // for testing only
   form: FormGroup = this.fb.group({
     first_name: ['', [Validators.pattern('^[a-zA-Z]+$')]],
     last_name: ['', [Validators.pattern('^[a-zA-Z]+$')]],
+    mrn: ['', [Validators.pattern('^[0-9]+$')]],
   });
   filterConfig = {
+    mrn: { field: 'MRN', connector: ' is ' },
     first_name: { field: 'First Name', connector: ' starts with ' },
     last_name: { field: 'Last Name', connector: ' starts with ' },
   };
 
   constructor(
-    public searchService: SearchService,
+    public searchService: PatientSearchService,
     private fb: FormBuilder,
     private genericService: GenericService
   ) {}
@@ -135,8 +138,12 @@ export class SearchComponent {
     return this.form.get('last_name');
   }
 
+  get mrn() {
+    return this.form.get('mrn');
+  }
+
   search(sort: boolean) {
-    this.searchStatus = `firstName: ${this.form.value.first_name} lastName: ${this.form.value.last_name}`;
+    this.searchStatus = `mrn: ${this.form.value.mrn}, firstName: ${this.form.value.first_name} lastName: ${this.form.value.last_name}`;
   }
 
   rowSelect(row: any) {

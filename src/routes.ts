@@ -1,15 +1,16 @@
 import { Route } from '@angular/router';
-import { SearchComponent } from './search';
+import { PrescriberSearchComponent } from './prescriber/prescriber-search';
+import { PatientSearchComponent } from './patient/patient-search';
 
 export const routes: Route[] = [
   {
     path: 'prescriber',
-    component: SearchComponent,
+    component: PrescriberSearchComponent,
   },
-  // {
-  //   path: 'patient',
-  //   component: ProductComponent,
-  // },
+  {
+    path: 'patient',
+    component: PatientSearchComponent,
+  },
   {
     path: '**',
     redirectTo: 'prescriber',

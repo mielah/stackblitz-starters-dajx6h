@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { InputGroupModule } from 'primeng/inputgroup';
 import {
   FormBuilder,
@@ -7,15 +7,16 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { GenericComponent } from './generic';
+import { GenericComponent } from '../generic/generic';
 import { TableModule } from 'primeng/table';
-import { SearchService } from './search.service';
-import { GenericService } from './generic.service';
+import { GenericService } from '../generic/generic.service';
 import { RouterLink } from '@angular/router';
+import { PrescriberSearchService } from './prescriber-search.service';
 
 @Component({
-  selector: 'app-search',
+  selector: 'app-prescriber-search',
   providers: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -27,7 +28,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   template: `
   <div>
-    <a [routerLink]="'patient'">Go to patient search</a>
+    <a [routerLink]="['/patient']">Go to patient search</a>
     <h1>Prescriber Search {{searchStatus}}</h1>
     <div [formGroup]="form">
      <app-generic (searchInitiated)="search($event)">
@@ -98,8 +99,8 @@ import { RouterLink } from '@angular/router';
 </div>
   `,
 })
-export class SearchComponent {
-  searchStatus = '';
+export class PrescriberSearchComponent {
+  searchStatus = ''; // for testing only
   form: FormGroup = this.fb.group({
     first_name: ['', [Validators.pattern('^[a-zA-Z]+$')]],
     last_name: ['', [Validators.pattern('^[a-zA-Z]+$')]],
@@ -110,7 +111,7 @@ export class SearchComponent {
   };
 
   constructor(
-    public searchService: SearchService,
+    public searchService: PrescriberSearchService,
     private fb: FormBuilder,
     private genericService: GenericService
   ) {}
