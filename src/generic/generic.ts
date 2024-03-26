@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, WritableSignal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, WritableSignal, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ export interface Filter {
 @Component({
   selector: 'app-generic',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -28,7 +28,7 @@ export interface Filter {
   <div *ngIf="genericService.form() as form">
   <form [formGroup]="form" name="simplePatientSearchForm" (ngSubmit)="sendSearchEvent()">
     <ng-content select="[simple]"></ng-content>
-    <p-button type="Submit">Submit</p-button>
+    <p-button type="Submit" [disabled]="form.invalid">Submit</p-button>
   </form>
 
   <!-- Advanced search link -->
@@ -70,7 +70,13 @@ export class GenericComponent {
 
   advancedPanelOpen: WritableSignal<boolean> = signal<boolean>(false);
 
-  constructor(public genericService: GenericService) { }
+  constructor(public genericService: GenericService, private cdr: ChangeDetectorRef) { }
+
+  ngOnInit(): void {
+    this.genericService.form().statusChanges.subscribe(() => {
+      this.cdr.detectChanges()
+    });
+  }
 
   sendSearchEvent() {
     this.searchInitiated.emit(false);

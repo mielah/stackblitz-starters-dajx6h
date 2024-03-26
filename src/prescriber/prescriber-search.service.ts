@@ -14,4 +14,19 @@ export class PrescriberSearchService {
       location: 'hospital A',
     },
   ]);
+
+  mockSearch() {
+    this.data$ = of([
+      {
+        name: 'test',
+        dob: '1/1/1980',
+        location: 'hospital B',
+      },
+      {
+        name: 'dr death',
+        dob: '1/1/1970',
+        location: 'hospital A',
+      },
+    ])
+  }
 }

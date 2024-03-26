@@ -138,6 +138,7 @@ export class PrescriberSearchComponent {
 
   search(sort: boolean) {
     this.searchStatus = `firstName: ${this.form.value.first_name} lastName: ${this.form.value.last_name}`;
+    this.searchService.mockSearch();
   }
 
   rowSelect(row: any) {
