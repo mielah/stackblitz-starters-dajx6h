@@ -153,7 +153,6 @@ export class PatientSearchComponent {
           validators: {
             validation: ['basicDash'],
           },
-          formControl: this.form.controls['first_name'],
         },
         {
           template: '<hr /><div><strong>Status:</strong></div>',
@@ -225,7 +224,6 @@ export class PatientSearchComponent {
             validators: {
               validation: ['basicDash'],
             },
-            formControl: this.form.controls['first_name'],
           },
           {
             key: 'last_name',
@@ -239,7 +237,6 @@ export class PatientSearchComponent {
             validators: {
               validation: ['basicDash'],
             },
-            formControl: this.form.controls['last_name'],
           },
         ],
       },
@@ -260,7 +257,6 @@ export class PatientSearchComponent {
         expressions: {
           'validation.show': 'true',
         },
-        formControl: this.form.controls['mrn'],
       },
     ],
     },
