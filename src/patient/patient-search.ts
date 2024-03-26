@@ -20,7 +20,7 @@ import { atLeastOneRequired } from '../shared';
 @Component({
   selector: 'app-patient-search',
   providers: [],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -43,55 +43,22 @@ import { atLeastOneRequired } from '../shared';
         <formly-form 
             [form]="form"
             [fields]="fields"
-            [model]="model">
+            [model]="model"
+            (modelChange)="syncInput($event)">
           </formly-form>
         </div>
       </div>
-      
-        <div class="d-flex flex-row gap-3">
-           <!-- MRN input -->
-           <div class="flex-column">
-            <div class="p-inputgroup">
-              <span class="p-float-label">
-                <input pInputText placeholder="MRN" class="form-control" type="text" id="mrn"
-                  name="mrn" formControlName="mrn" />
-                  <label htmlFor="mrn" class="fs-6">MRN</label>
-              </span>
-            </div>
-            <div *ngIf="mrn?.invalid && (mrn?.dirty || mrn?.touched)" class="text-danger ms-5">
-              <small *ngIf="mrn?.errors?.['pattern']">Invalid MRN</small>
-            </div>
-          </div>
-        </div>
 
-        <div class="d-flex flex-row gap-3 justify-content" advanced>
-           <!-- First name input -->
-           <div class="flex-column">
-            <div class="p-inputgroup">
-              <span class="p-float-label">
-                <input pInputText placeholder="First Name" class="form-control" type="text" id="first_name"
-                  name="first_name" formControlName="first_name"/>
-                  <label htmlFor="first_name" class="fs-6">First Name</label>
-              </span>
-            </div>
-            <div *ngIf="first_name?.invalid && (first_name?.dirty || first_name?.touched)" class="text-danger ms-5">
-              <small *ngIf="first_name?.errors?.['pattern']">Invalid First Name</small>
-            </div>
-          </div>
-        <!-- Last name input -->
+      <div class="d-flex flex-row gap-3" advanced>
         <div class="flex-column">
-            <div class="p-inputgroup">
-              <span class="p-float-label">
-                <input pInputText placeholder="Last Name" class="form-control" type="text" id="last_name"
-                  name="last_name" formControlName="last_name" />
-                  <label htmlFor="last_name" class="fs-6">Last Name</label>
-              </span>
-            </div>
-            <div *ngIf="last_name?.invalid && (last_name?.dirty || last_name?.touched)" class="text-danger ms-5">
-              <small *ngIf="last_name?.errors?.['pattern']">Invalid Last Name</small>
-            </div>
-          </div>
+          <formly-form 
+            [form]="form"
+            [fields]="advancedFields"
+            [model]="model"
+            (modelChange)="syncInput($event)">
+          </formly-form>
         </div>
+      </div>
       </app-generic>
   </div>
   <p-table [value]="(this.searchService.data$ | async) || []" dataKey="name" [tableStyle]="{ 'min-width': '50rem' }"
@@ -138,13 +105,13 @@ export class PatientSearchComponent {
   ngOnInit() {
     this.genericService.form.set(this.form);
     this.genericService.filterData.set(this.filterConfig);
+  }
 
-    this.form.controls['first_name'].valueChanges.subscribe((x) => {
-      this.form.controls['first_name'].setValue(x, {
-        onlySelf: true,
-        emitEvent: false,
-      })
-    })
+  syncInput(event: any) {
+    this.model = {
+         ...this.model,
+         first_name: event.first_name
+     }
   }
 
   get first_name() {
@@ -162,6 +129,7 @@ export class PatientSearchComponent {
   search(sort: boolean) {
     this.searchStatus = `mrn: ${this.form.value.mrn}, firstName: ${this.form.value.first_name} lastName: ${this.form.value.last_name}`;
     this.searchService.mockSearch();
+    console.log(this.model);
   }
 
   rowSelect(row: any) {
@@ -233,6 +201,68 @@ export class PatientSearchComponent {
           ],
         },
       ],
+    },
+  ];
+
+  advancedFields: FormlyFieldConfig[] = [
+    {
+      validators: {
+        validation: [atLeastOneRequired],
+      },
+      fieldGroup: [
+        {
+        fieldGroupClassName: 'd-flex flex-row gap-2 pb-3',
+        fieldGroup: [
+          {
+            key: 'first_name',
+            className: 'col-6',
+            type: InputIconType,
+            props: {
+              label: 'First Name',
+              placeholder: 'First name',
+              error: 'Invalid First name',
+            },
+            validators: {
+              validation: ['basicDash'],
+            },
+            formControl: this.form.controls['first_name'],
+          },
+          {
+            key: 'last_name',
+            className: 'col-6',
+            type: InputIconType,
+            props: {
+              label: 'Last Name',
+              placeholder: 'Last name',
+              error: 'Invalid Last name',
+            },
+            validators: {
+              validation: ['basicDash'],
+            },
+            formControl: this.form.controls['last_name'],
+          },
+        ],
+      },
+      {
+        key: 'mrn',
+        type: 'input',
+        props: {
+          placeholder: 'MRN',
+          error: 'Invalid MRN',
+          pattern: /^[0-9]+$/,
+        },
+        validation: {
+          messages: {
+            pattern: (error: any, field: FormlyFieldConfig) => `"${field.formControl?.value}" is not a valid MRN`,
+          },
+          show: true,
+        },
+        expressions: {
+          'validation.show': 'true',
+        },
+        formControl: this.form.controls['mrn'],
+      },
+    ],
     },
   ];
 }
