@@ -6,8 +6,8 @@ import {
 } from '@angular/forms';
 import { FormlyModule } from '@ngx-formly/core';
 
-import { log } from '../shared';
-
+// custom text input type for formly forms that includes an icon
+// and a float label
 @Component({
     selector: 'icon-input',
     imports: [ReactiveFormsModule, FormlyModule, CommonModule],
@@ -43,6 +43,4 @@ import { log } from '../shared';
     </div>
   `,
 })
-export class InputIconType extends FieldType<FieldTypeConfig> {
-    log = log;
-}
+export class InputIconType extends FieldType<FieldTypeConfig> {}

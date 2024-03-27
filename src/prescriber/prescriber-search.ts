@@ -14,6 +14,7 @@ import { GenericComponent } from '../generic/generic';
 import { GenericService } from '../generic/generic.service';
 import { PrescriberSearchService } from './prescriber-search.service';
 
+// uses manually defined forms instead of formly dynamic forms
 @Component({
   selector: 'app-prescriber-search',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,6 +33,7 @@ import { PrescriberSearchService } from './prescriber-search.service';
     <h1>Prescriber Search {{searchStatus}}</h1>
     <div [formGroup]="form">
       <app-generic (searchInitiated)="search()">
+        <!-- Simple search form -->
         <div class="d-flex flex-row gap-3" simple>
           <!-- First name input -->
           <div class="flex-column">
@@ -58,6 +60,7 @@ import { PrescriberSearchService } from './prescriber-search.service';
           </div>
         </div>
 
+        <!-- Advanced search form -->
         <div class="d-flex flex-row gap-3" advanced>
           <!-- First name input -->
           <div class="flex-column">
@@ -108,6 +111,8 @@ import { PrescriberSearchService } from './prescriber-search.service';
         </div>
       </app-generic>
     </div>
+
+    <!-- Data table -->
     <p-table
       [value]="(this.searchService.data$ | async) || []"
       dataKey="name"

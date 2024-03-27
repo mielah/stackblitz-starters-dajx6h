@@ -61,6 +61,8 @@ import { atLeastOneRequired } from '../shared';
         </div>
       </app-generic>
     </div>
+
+    <!-- Data table -->
     <p-table
       [value]="(this.searchService.data$ | async) || []"
       dataKey="name"
@@ -84,7 +86,10 @@ import { atLeastOneRequired } from '../shared';
 })
 export class PatientSearchComponent {
   searchStatus = ''; // for testing only
-  model: any;
+  model: any; // needed for formly form
+
+  // status checkboxes not included in this form
+  // because they were just for testing form formatting
   form: FormGroup = this.fb.group({
     first_name: ['', [Validators.pattern('^[a-zA-Z]+$')]],
     last_name: ['', [Validators.pattern('^[a-zA-Z]+$')]],
@@ -112,18 +117,6 @@ export class PatientSearchComponent {
       ...this.model,
       first_name: event.first_name
     }
-  }
-
-  get first_name() {
-    return this.form.get('first_name');
-  }
-
-  get last_name() {
-    return this.form.get('last_name');
-  }
-
-  get mrn() {
-    return this.form.get('mrn');
   }
 
   search() {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, WritableSignal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, WritableSignal, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -43,6 +43,7 @@ export interface Filter {
         (onClick)="flipSignalToggle(advancedPanelOpen)"></p-button>
     </div>
 
+    <!-- Filter data chips -->
     <div class="d-flex flex-row gap-2 flex-wrap">
       <span *ngFor="let filter of getSelectedSearchCriteria(form.value)">
         <p-chip styleClass="m-0">
@@ -85,6 +86,7 @@ export class GenericComponent {
   constructor(public genericService: GenericService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    // needed for the submit button status to update
     this.genericService.form().statusChanges.subscribe(() => {
       this.cdr.detectChanges()
     });
@@ -94,6 +96,8 @@ export class GenericComponent {
     this.searchInitiated.emit(false);
   }
 
+  // use filterData to convert the form into the filter chips
+  // that display the active filters
   getSelectedSearchCriteria(searchForm: any): Filter[] {
     const criteria: Filter[] = [];
 

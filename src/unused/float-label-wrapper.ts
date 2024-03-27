@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 
-
 @Component({
   selector: 'float-label-wrapper',
   imports: [CommonModule, IconFieldModule, InputIconModule],
