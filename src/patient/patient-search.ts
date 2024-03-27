@@ -14,7 +14,7 @@ import { GenericService } from '../generic/generic.service';
 import { RouterLink } from '@angular/router';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
-import { InputIconType } from '../generic/input-icon-input';
+import { InputIconType } from '../custom/input-icon-input';
 import { atLeastOneRequired } from '../shared';
 
 @Component({
