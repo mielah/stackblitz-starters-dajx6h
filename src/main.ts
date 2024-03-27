@@ -5,8 +5,9 @@ import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { routes } from './routes';
 import { FormlyModule } from '@ngx-formly/core';
+
+import { routes } from './routes';
 
 @Component({
   selector: 'app-root',
@@ -28,10 +29,6 @@ bootstrapApplication(App, {
       validators: [
         { name: 'basicDash', validation: Validators.pattern(dashStringValidation) },
       ],
-        // validationMessages: [{ name: 'required', message: 'This field is required' }],
-        // types: [
-        //   { name: 'object', component: ObjectTypeComponent },
-        // ],
-      }),
-]),],
+    }),
+  ]),],
 });

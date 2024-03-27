@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, WritableSignal } from '@angular/core';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { ButtonModule } from 'primeng/button';
 import {
@@ -9,6 +9,7 @@ import {
   transition,
   animate,
 } from '@angular/animations';
+
 import { flipSignalToggle } from '../shared';
 
 @Component({
@@ -18,9 +19,12 @@ import { flipSignalToggle } from '../shared';
   imports: [CommonModule, ButtonModule, InputGroupModule],
   standalone: true,
   template: `
-  <div style="overflow-x: hidden;width:0;" [@panel]="opened() ? 'true' : 'false'">
-    <p-button label="Collapse"
-            icon="fa fa-solid fa-angle-right fa-xl" iconPos="right" (onClick)="flipSignalToggle(opened)">
+  <div
+    style="overflow-x: hidden; width: 0"
+    [@panel]="opened() ? 'true' : 'false'">
+    <p-button
+      label="Collapse"
+      (onClick)="flipSignalToggle(opened)">
     </p-button>
     <ng-content></ng-content>
   </div>
@@ -37,5 +41,5 @@ export class PanelComponent {
   flipSignalToggle = flipSignalToggle
   @Input() opened!: WritableSignal<boolean>;
 
-  constructor() {}
+  constructor() { }
 }

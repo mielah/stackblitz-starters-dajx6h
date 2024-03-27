@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { ReactiveFormsModule } from '@angular/forms';
+
 import { PanelComponent } from './panel';
 import { GenericService } from './generic.service';
 import { flipSignalToggle } from '../shared'
@@ -16,7 +17,7 @@ export interface Filter {
 @Component({
   selector: 'app-generic',
   standalone: true,
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -26,48 +27,59 @@ export interface Filter {
   ],
   template: `
   <div *ngIf="genericService.form() as form">
-  <form [formGroup]="form" name="simplePatientSearchForm" (ngSubmit)="sendSearchEvent()">
-    <ng-content select="[simple]"></ng-content>
-    <p-button type="Submit" [disabled]="form.invalid">Submit</p-button>
-  </form>
-
-  <!-- Advanced search link -->
-  <div style="margin-top: 2rem; margin-bottom: 1rem;">
-    <p-button label="Advanced Search" styleClass="p-button-link p-0 fs-5-5"
-      (onClick)="flipSignalToggle(advancedPanelOpen)"></p-button>
-  </div>
-
-  <div class="d-flex flex-row gap-2 flex-wrap">
-    <span *ngFor="let filter of getSelectedSearchCriteria(form.value)">
-      <p-chip styleClass="m-0">
-        <b>{{ filter.field }}&nbsp;</b>
-        {{ filter.connector }}
-        <b>&nbsp;{{ filter.value }}</b>
-      </p-chip>
-    </span>
-  </div>
-
-  <app-panel [opened]="advancedPanelOpen">
-  <form [formGroup]="form" name="advPatientSearchForm" (ngSubmit)="sendSearchEvent()">
-    <hr>
-      <ng-content select="[advanced]"></ng-content>
-    <hr>
-    <div class="justify-content-end gap-2 flex-row d-flex mt-4">
-      <p-button (click)="form.reset()" label="Clear"
-        styleClass="p-button-secondary p-button-outlined p-button-slim "></p-button>
-      <p-button type="Submit" label="Search" styleClass="p-button-primary p-button-slim p-button-raised"
-        [disabled]="form.invalid"></p-button>
-    </div>
+    <form
+      [formGroup]="form"
+      name="simplePatientSearchForm"
+      (ngSubmit)="sendSearchEvent()">
+      <ng-content select="[simple]"></ng-content>
+      <p-button type="Submit" [disabled]="form.invalid">Submit</p-button>
     </form>
-  </app-panel>
-</div>
+
+    <!-- Advanced search link -->
+    <div style="margin-top: 2rem; margin-bottom: 1rem">
+      <p-button
+        label="Advanced Search"
+        styleClass="p-button-link p-0 fs-5-5"
+        (onClick)="flipSignalToggle(advancedPanelOpen)"></p-button>
+    </div>
+
+    <div class="d-flex flex-row gap-2 flex-wrap">
+      <span *ngFor="let filter of getSelectedSearchCriteria(form.value)">
+        <p-chip styleClass="m-0">
+          <b>{{ filter.field }}&nbsp;</b>
+          {{ filter.connector }}
+          <b>&nbsp;{{ filter.value }}</b>
+        </p-chip>
+      </span>
+    </div>
+
+    <app-panel [opened]="advancedPanelOpen">
+      <form
+        [formGroup]="form"
+        name="advPatientSearchForm"
+        (ngSubmit)="sendSearchEvent()">
+        <hr />
+        <ng-content select="[advanced]"></ng-content>
+        <hr />
+        <div class="gap-2 flex-row d-flex mt-4">
+          <p-button
+            (click)="form.reset()"
+            label="Clear"
+            styleClass="p-button-secondary p-button-outlined p-button-slim "></p-button>
+          <p-button
+            type="Submit"
+            label="Search"
+            styleClass="p-button-primary p-button-slim p-button-raised"
+            [disabled]="form.invalid"></p-button>
+        </div>
+      </form>
+    </app-panel>
+  </div>
   `,
-  providers: [],
 })
 export class GenericComponent {
   flipSignalToggle = flipSignalToggle;
   @Output() searchInitiated = new EventEmitter<boolean>();
-
   advancedPanelOpen: WritableSignal<boolean> = signal<boolean>(false);
 
   constructor(public genericService: GenericService, private cdr: ChangeDetectorRef) { }

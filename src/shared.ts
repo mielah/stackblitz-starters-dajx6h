@@ -15,11 +15,10 @@ export const atLeastOneRequired: ValidatorFn = (control: AbstractControl) => {
     const mrn = control.get('mrn');
 
     const atLeastOneFieldFilled =
-      firstName?.value ||
-      lastName?.value ||
-      mrn?.value;
-  
+        firstName?.value ||
+        lastName?.value ||
+        mrn?.value;
+
     return (!atLeastOneFieldFilled) ? { atLeastOneRequired: true } : null;
-  };
-  
-  
+};
+
