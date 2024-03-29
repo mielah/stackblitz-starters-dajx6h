@@ -152,8 +152,7 @@ export class PrescriberSearchComponent {
   ) {}
 
   ngOnInit() {
-    this.genericService.form.set(this.form);
-    this.genericService.filterData.set(this.filterConfig);
+    this.genericService.setActiveState(this.form, this.filterConfig);
   }
 
   get first_name() {

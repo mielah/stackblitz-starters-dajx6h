@@ -6,13 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { PanelComponent } from './panel';
 import { GenericService } from './generic.service';
-import { flipSignalToggle } from '../shared'
-
-export interface Filter {
-  field: string;
-  connector: string;
-  value: string;
-}
+import { flipSignalToggle, Filter } from '../shared'
 
 @Component({
   selector: 'app-generic',
@@ -106,7 +100,7 @@ export class GenericComponent {
       const fieldConfig = this.genericService.filterData()[fieldName];
 
       if (fieldValue && fieldValue.length > 0 && fieldConfig) {
-        criteria.push({ value: fieldValue, ...fieldConfig });
+        criteria.push({ ...fieldConfig, value: fieldValue });
       }
     });
 

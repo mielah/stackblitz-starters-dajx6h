@@ -108,8 +108,7 @@ export class PatientSearchComponent {
   ) { }
 
   ngOnInit() {
-    this.genericService.form.set(this.form);
-    this.genericService.filterData.set(this.filterConfig);
+    this.genericService.setActiveState(this.form, this.filterConfig);
   }
 
   syncInput(event: any) {
@@ -134,6 +133,7 @@ export class PatientSearchComponent {
         validation: [atLeastOneRequired],
       },
       fieldGroup: [
+        // TODO: create a registry of fields to reduce duplication
         {
           key: 'first_name',
           type: InputIconType,

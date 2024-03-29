@@ -1,6 +1,12 @@
 import { WritableSignal } from "@angular/core";
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 
+export interface Filter {
+    field: string;
+    connector: string;
+    value?: string;
+  }
+
 export const flipSignalToggle = (target: WritableSignal<boolean>) => {
     target.update(value => !value);
 }
